@@ -1,3 +1,4 @@
+import scala.collection.immutable.SeqOps
 import scala.Ordering.Implicits.*
 
 trait RingSeq:
@@ -8,76 +9,76 @@ trait RingSeq:
   /* and a RingSeq index, any value is valid */
   type IndexO = Int
 
-  extension[A, B <: Seq[A]](ring: B)
-  
+  extension[A, B[_] <: SeqOps[A, B, B[A]]](ring: B[A])
+
     private def index(i: IndexO): Index =
       java.lang.Math.floorMod(i, ring.size)
 
     def applyO(i: IndexO): A =
       ring(index(i))
 
-    def rotateRight(step: Int): B =
+    def rotateRight(step: Int): B[A] =
       if ring.isEmpty then ring
       else
         val j: Index = ring.size - index(step)
-        (ring.drop(j) ++ ring.take(j)).asInstanceOf[B]
+        ring.drop(j) ++ ring.take(j)
 
-    def rotateLeft(step: Int): B =
+    def rotateLeft(step: Int): B[A] =
       rotateRight(-step)
 
-    def startAt(i: IndexO): B =
+    def startAt(i: IndexO): B[A] =
       rotateLeft(i)
 
-    def reflectAt(i: IndexO = 0): B =
-      startAt(i + 1).reverse.asInstanceOf[B]
+    def reflectAt(i: IndexO = 0): B[A] =
+      startAt(i + 1).reverse
 
     def segmentLengthO(p: A => Boolean, from: IndexO = 0): Int =
       startAt(from).segmentLength(p)
 
-    private def multiply(times: Int): B =
-      Seq.fill(times)(ring).flatten.asInstanceOf[B]
+    private def multiply(times: Int): B[A] =
+      Seq.fill(times)(ring).flatten.asInstanceOf[B[A]]
 
-    def sliceO(from: IndexO, to: IndexO): B =
-      if from >= to || ring.isEmpty then Seq.empty.asInstanceOf[B]
+    def sliceO(from: IndexO, to: IndexO): B[A] =
+      if from >= to || ring.isEmpty then Seq.empty.asInstanceOf[B[A]]
       else
         val length = to - from
         val times = Math.ceil(length / ring.size).toInt + 1
-        startAt(from).multiply(times).take(length).asInstanceOf[B]
+        startAt(from).multiply(times).take(length)
  
-    private def growBy(growth: Int): B =
+    private def growBy(growth: Int): B[A] =
       sliceO(0, ring.size + growth)
 
-    def containsSliceO(slice: B): Boolean =
+    def containsSliceO(slice: Seq[A]): Boolean =
       growBy(slice.size - 1).containsSlice(slice)
 
-    def indexOfSliceO(slice: B): Index =
+    def indexOfSliceO(slice: Seq[A]): Index =
       growBy(slice.size - 1).indexOfSlice(slice)
 
-    def lastIndexOfSliceO(slice: B): Index =
+    def lastIndexOfSliceO(slice: Seq[A]): Index =
       growBy(slice.size - 1).lastIndexOfSlice(slice)
 
-    def lastIndexOfSliceO(slice: B, end: Index): Index =
+    def lastIndexOfSliceO(slice: Seq[A], end: Index): Index =
       growBy(slice.size - 1).lastIndexOfSlice(slice, end)
 
-    def slidingO(size: Int, step: Int = 1): Iterator[B] =
-      sliceO(0, step * (ring.size - 1) + size).sliding(size, step).asInstanceOf[Iterator[B]]
+    def slidingO(size: Int, step: Int = 1): Iterator[B[A]] =
+      sliceO(0, step * (ring.size - 1) + size).sliding(size, step)
 
-    def allRotations: Iterator[B] =
+    def allRotations: Iterator[B[A]] =
       slidingO(ring.size)
 
-    def allRotationsAndReflections: Iterator[B] =
-      (allRotations ++ ring.reverse.allRotations).asInstanceOf[Iterator[B]]
+    def allRotationsAndReflections: Iterator[B[A]] =
+      (allRotations ++ ring.reverse.allRotations)
 
-    def minRotation(implicit ordering: Ordering[B]): B =
+    def minRotation(implicit ordering: Ordering[B[A]]): B[A] =
       allRotations.min(ordering)
 
-    def isRotationOf(other: B): Boolean =
+    def isRotationOf(other: Seq[A]): Boolean =
       allRotations.contains(other)
 
-    def isReflectionOf(other: B): Boolean =
+    def isReflectionOf(other: Seq[A]): Boolean =
       ring == other || ring.reflectAt() == other
 
-    def isRotationOrReflectionOf(other: B): Boolean =
+    def isRotationOrReflectionOf(other: Seq[A]): Boolean =
       val reflected = other.reverse
       allRotations.exists(r => r == other || r == reflected)
 
