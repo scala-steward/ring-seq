@@ -3,74 +3,82 @@ import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
 
 import math.Ordering.Implicits.seqOrdering
+import scala.collection.immutable.Queue
 
-class RotationsReflectionsSpec extends AnyFlatSpec with RingVector with should.Matchers {
+class RotationsReflectionsSpec extends AnyFlatSpec with RingSeq with should.Matchers {
 
-  val v = Vector(1, 2, 3, 4, 5)
-  val oneLeft = Vector(2, 3, 4, 5, 1)
+  val s = Seq(1, 2, 3, 4, 5)
+  val oneLeft = Seq(2, 3, 4, 5, 1)
 
-  "A Vector considered as a ring" can "be rotated one step to the right" in {
-    v.rotateRight(1) shouldBe Vector(5, 1, 2, 3, 4)
+  "Any Seq subtype" can "be rotated" in {
+    "SCALA".rotateRight(2).mkString shouldEqual "LASCA"
+    s.toList.rotateRight(2) shouldBe List(4, 5, 1, 2, 3)
+    s.toVector.rotateRight(2) shouldBe Vector(4, 5, 1, 2, 3)
+    Queue(1, 2, 3, 4, 5).rotateRight(2) shouldBe Queue(4, 5, 1, 2, 3)
+  }
+
+  "A Seq considered as a ring" can "be rotated one step to the right" in {
+    s.rotateRight(1) shouldBe Seq(5, 1, 2, 3, 4)
   }
 
   it can "be rotated one step to the left" in {
-    v.rotateLeft(1) shouldBe oneLeft
-    v.rotateRight(-1) shouldBe oneLeft
+    s.rotateLeft(1) shouldBe oneLeft
+    s.rotateRight(-1) shouldBe oneLeft
   }
 
   it can "be rotated to start where index 1 is" in {
-    v.startAt(1) shouldBe oneLeft
+    s.startAt(1) shouldBe oneLeft
   }
 
   it can "be reflected" in {
-    v.reflectAt() shouldBe Vector(1, 5, 4, 3, 2)
+    s.reflectAt() shouldBe Seq(1, 5, 4, 3, 2)
   }
 
   it can "be reflected at a given index" in {
-    v.reflectAt(2) shouldBe Vector(3, 2, 1, 5, 4)
+    s.reflectAt(2) shouldBe Seq(3, 2, 1, 5, 4)
   }
 
   it can "iterate on all rotations" in {
-    v.allRotations.toList shouldBe List(
-      v,
+    s.allRotations.toList shouldBe List(
+      s,
       oneLeft,
-      Vector(3, 4, 5, 1, 2),
-      Vector(4, 5, 1, 2, 3),
-      Vector(5, 1, 2, 3, 4)
+      Seq(3, 4, 5, 1, 2),
+      Seq(4, 5, 1, 2, 3),
+      Seq(5, 1, 2, 3, 4)
     )
   }
 
   it can "iterate on all rotations and reflections" in {
-    v.allRotationsAndReflections.toList shouldBe List(
-      v,
+    s.allRotationsAndReflections.toList shouldBe List(
+      s,
       oneLeft,
-      Vector(3, 4, 5, 1, 2),
-      Vector(4, 5, 1, 2, 3),
-      Vector(5, 1, 2, 3, 4),
-      Vector(5, 4, 3, 2, 1),
-      Vector(4, 3, 2, 1, 5),
-      Vector(3, 2, 1, 5, 4),
-      Vector(2, 1, 5, 4, 3),
-      Vector(1, 5, 4, 3, 2)
+      Seq(3, 4, 5, 1, 2),
+      Seq(4, 5, 1, 2, 3),
+      Seq(5, 1, 2, 3, 4),
+      Seq(5, 4, 3, 2, 1),
+      Seq(4, 3, 2, 1, 5),
+      Seq(3, 2, 1, 5, 4),
+      Seq(2, 1, 5, 4, 3),
+      Seq(1, 5, 4, 3, 2)
     )
   }
 
   it can "return the sorted minimum rotation" in {
-    Vector(1, 2, 3, 4, 1).minRotation shouldBe Vector(1, 1, 2, 3, 4)
+    Seq(1, 2, 3, 4, 1).minRotation shouldBe Seq(1, 1, 2, 3, 4)
   }
 
-  it can "be the rotation of another Vector" in {
-    v.isRotationOf(v) shouldBe true
-    v.isRotationOf(Vector(3, 4, 5, 1, 2)) shouldBe true
+  it can "be the rotation of another Seq" in {
+    s.isRotationOf(s) shouldBe true
+    s.isRotationOf(Seq(3, 4, 5, 1, 2)) shouldBe true
   }
 
-  it can "be the reflection of another Vector" in {
-    v.isReflectionOf(v) shouldBe true
-    v.isReflectionOf(Vector(1, 5, 4, 3, 2)) shouldBe true
+  it can "be the reflection of another Seq" in {
+    s.isReflectionOf(s) shouldBe true
+    s.isReflectionOf(Seq(1, 5, 4, 3, 2)) shouldBe true
   }
 
-  it can "be the rotation or reflection of another Vector" in {
-    v.isRotationOrReflectionOf(v) shouldBe true
-    v.isRotationOrReflectionOf(Vector(3, 2, 1, 5, 4)) shouldBe true
+  it can "be the rotation or reflection of another Seq" in {
+    s.isRotationOrReflectionOf(s) shouldBe true
+    s.isRotationOrReflectionOf(Seq(3, 2, 1, 5, 4)) shouldBe true
   }
 }

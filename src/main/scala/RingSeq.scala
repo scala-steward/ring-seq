@@ -1,14 +1,14 @@
-import Ordering.Implicits.*
+import scala.Ordering.Implicits.*
 
-trait RingVector:
+trait RingSeq:
   
-  /* for improved readability, a Vector index */
+  /* for improved readability, a Seq index */
   type Index = Int
 
-  /* and a RingVector index, any value is valid */
+  /* and a RingSeq index, any value is valid */
   type IndexO = Int
 
-  extension[A](ring: Vector[A])
+  extension[A, B <: Seq[A]](ring: B)
   
     private def index(i: IndexO): Index =
       java.lang.Math.floorMod(i, ring.size)
@@ -16,68 +16,68 @@ trait RingVector:
     def applyO(i: IndexO): A =
       ring(index(i))
 
-    def rotateRight(step: Int): Vector[A] = 
+    def rotateRight(step: Int): B =
       if ring.isEmpty then ring
       else
-        val j: Index = ring.size - index(step) 
-        ring.drop(j) ++ ring.take(j)
+        val j: Index = ring.size - index(step)
+        (ring.drop(j) ++ ring.take(j)).asInstanceOf[B]
 
-    def rotateLeft(step: Int): Vector[A] =
+    def rotateLeft(step: Int): B =
       rotateRight(-step)
 
-    def startAt(i: IndexO): Vector[A] =
+    def startAt(i: IndexO): B =
       rotateLeft(i)
 
-    def reflectAt(i: IndexO = 0): Vector[A] =
-      startAt(i + 1).reverse
+    def reflectAt(i: IndexO = 0): B =
+      startAt(i + 1).reverse.asInstanceOf[B]
 
     def segmentLengthO(p: A => Boolean, from: IndexO = 0): Int =
       startAt(from).segmentLength(p)
 
-    private def multiply(times: Int): Vector[A] =
-      Vector.fill(times)(ring).flatten
+    private def multiply(times: Int): B =
+      Seq.fill(times)(ring).flatten.asInstanceOf[B]
 
-    def sliceO(from: IndexO, to: IndexO): Vector[A] =
-      if from >= to || ring.isEmpty then Vector.empty
+    def sliceO(from: IndexO, to: IndexO): B =
+      if from >= to || ring.isEmpty then Seq.empty.asInstanceOf[B]
       else
         val length = to - from
         val times = Math.ceil(length / ring.size).toInt + 1
-        startAt(from).multiply(times).take(length)
+        startAt(from).multiply(times).take(length).asInstanceOf[B]
  
-    private def growBy(growth: Int): Vector[A] =
+    private def growBy(growth: Int): B =
       sliceO(0, ring.size + growth)
 
-    def containsSliceO(slice: Vector[A]): Boolean =
+    def containsSliceO(slice: B): Boolean =
       growBy(slice.size - 1).containsSlice(slice)
 
-    def indexOfSliceO(slice: Vector[A]): Index =
+    def indexOfSliceO(slice: B): Index =
       growBy(slice.size - 1).indexOfSlice(slice)
 
-    def lastIndexOfSliceO(slice: Vector[A]): Index =
+    def lastIndexOfSliceO(slice: B): Index =
       growBy(slice.size - 1).lastIndexOfSlice(slice)
 
-    def lastIndexOfSliceO(slice: Vector[A], end: Index): Index =
+    def lastIndexOfSliceO(slice: B, end: Index): Index =
       growBy(slice.size - 1).lastIndexOfSlice(slice, end)
 
-    def slidingO(size: Int, step: Int = 1): Iterator[Vector[A]] =
-      sliceO(0, step * (ring.size - 1) + size).sliding(size, step)
+    def slidingO(size: Int, step: Int = 1): Iterator[B] =
+      sliceO(0, step * (ring.size - 1) + size).sliding(size, step).asInstanceOf[Iterator[B]]
 
-    def allRotations: Iterator[Vector[A]] =
+    def allRotations: Iterator[B] =
       slidingO(ring.size)
 
-    def allRotationsAndReflections: Iterator[Vector[A]] =
-      allRotations ++ ring.reverse.allRotations
+    def allRotationsAndReflections: Iterator[B] =
+      (allRotations ++ ring.reverse.allRotations).asInstanceOf[Iterator[B]]
 
-    def minRotation(implicit ordering: Ordering[Vector[A]]): Vector[A] =
+    def minRotation(implicit ordering: Ordering[B]): B =
       allRotations.min(ordering)
 
-    def isRotationOf(other: Vector[A]): Boolean =
+    def isRotationOf(other: B): Boolean =
       allRotations.contains(other)
 
-    def isReflectionOf(other: Vector[A]): Boolean =
+    def isReflectionOf(other: B): Boolean =
       ring == other || ring.reflectAt() == other
 
-    def isRotationOrReflectionOf(other: Vector[A]): Boolean =
+    def isRotationOrReflectionOf(other: B): Boolean =
       val reflected = other.reverse
       allRotations.exists(r => r == other || r == reflected)
 
