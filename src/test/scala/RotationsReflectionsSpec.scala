@@ -68,8 +68,10 @@ class RotationsReflectionsSpec extends AnyFlatSpec with RingSeq with should.Matc
   }
 
   it can "be the rotation of another Seq" in {
+    Seq.empty.isRotationOf(Seq.empty) shouldBe true
     s.isRotationOf(s) shouldBe true
     s.isRotationOf(Seq(3, 4, 5, 1, 2)) shouldBe true
+    s.allRotations.forall(s.isRotationOf) shouldBe true
   }
 
   it can "be the reflection of another Seq" in {
@@ -78,7 +80,9 @@ class RotationsReflectionsSpec extends AnyFlatSpec with RingSeq with should.Matc
   }
 
   it can "be the rotation or reflection of another Seq" in {
+    Seq.empty.isRotationOrReflectionOf(Seq.empty) shouldBe true
     s.isRotationOrReflectionOf(s) shouldBe true
     s.isRotationOrReflectionOf(Seq(3, 2, 1, 5, 4)) shouldBe true
+    s.allRotationsAndReflections.forall(s.isRotationOrReflectionOf) shouldBe true
   }
 }

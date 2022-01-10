@@ -72,14 +72,13 @@ trait RingSeq:
       allRotations.min(ordering)
 
     def isRotationOf(other: B): Boolean =
-      allRotations.contains(other)
+      ring == other || allRotations.drop(1).contains(other)
 
     def isReflectionOf(other: B): Boolean =
       ring == other || ring.reflectAt() == other
 
     def isRotationOrReflectionOf(other: B): Boolean =
-      val reflected = other.reverse
-      allRotations.exists(r => r == other || r == reflected)
+      ring == other || allRotationsAndReflections.drop(1).contains(other)
 
     private def areFoldsSymmetrical: Int => Boolean =
       n => rotateRight(ring.size / n) == ring
