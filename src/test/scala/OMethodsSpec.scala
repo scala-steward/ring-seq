@@ -57,6 +57,12 @@ class OMethodsSpec extends AnyFlatSpec with RingVector with should.Matchers {
     v.sliceO(from, to) shouldBe Vector(5, 1, 2, 3, 4, 5, 1)
   }
 
+  it can "NOT be sliced if empty" in {
+    val (from, to) = (1, 2)
+    Vector.empty.slice(from, to) shouldBe Vector.empty
+    Vector.empty.sliceO(from, to) shouldBe Vector.empty
+  }
+
   it can "NOT be sliced to an empty circular slice" in {
     val (from, to) = (3, 3)
     v.slice(from, to) shouldBe Vector.empty
@@ -120,6 +126,11 @@ class OMethodsSpec extends AnyFlatSpec with RingVector with should.Matchers {
       Vector(2, 3),
       Vector(4, 5)
     )
+  }
+
+  it can "NOT be slided if empty" in {
+    Vector.empty.sliding(2).toList shouldBe Nil
+    Vector.empty.slidingO(2).toList shouldBe Nil
   }
 
 }
