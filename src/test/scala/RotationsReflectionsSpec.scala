@@ -84,19 +84,19 @@ class RotationsReflectionsSpec extends AnyFlatSpec with RingSeq with should.Matc
     s.allRotationsAndReflections.forall(s.isRotationOrReflectionOf) shouldBe true
   }
   
-  "All rotations of a Vector" must "contain itself" in {
+  "All rotations of a Seq" must "contain itself" in {
     check(
       forAll(arbitrary[Seq[Int]])(vector => vector.allRotations.contains(vector))
     )
   }
 
-  "All rotations and reflections of a Vector" must "contain itself" in {
+  "All rotations and reflections of a Seq" must "contain itself" in {
     check(
       forAll(arbitrary[Seq[Int]])(vector => vector.allRotationsAndReflections.contains(vector))
     )
   }
 
-  "A Vector" must "always be the rotation of itself" in {
+  "A Seq" must "always be the rotation of itself" in {
     check(
       forAll(arbitrary[Seq[Int]])(vector => vector.isRotationOf(vector))
     )
