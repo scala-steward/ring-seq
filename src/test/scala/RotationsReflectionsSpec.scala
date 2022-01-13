@@ -77,32 +77,27 @@ class RotationsReflectionsSpec extends AnyFlatSpec with RingVector with should.M
     v.allRotationsAndReflections.forall(v.isRotationOrReflectionOf) shouldBe true
   }
 
-  val vectorIntGen: Gen[Vector[Int]] =
-    for
-      list <- arbitrary[List[Int]]
-    yield list.toVector
-
   "All rotations of a Vector" must "contain itself" in {
     check(
-      forAll(vectorIntGen)(vector => vector.allRotations.contains(vector))
+      forAll(arbitrary[Vector[Int]])(vector => vector.allRotations.contains(vector))
     )
   }
 
   "All rotations and reflections of a Vector" must "contain itself" in {
     check(
-      forAll(vectorIntGen)(vector => vector.allRotationsAndReflections.contains(vector))
+      forAll(arbitrary[Vector[Int]])(vector => vector.allRotationsAndReflections.contains(vector))
     )
   }
 
   "A Vector" must "always be the rotation of itself" in {
     check(
-      forAll(vectorIntGen)(vector => vector.isRotationOf(vector))
+      forAll(arbitrary[Vector[Int]])(vector => vector.isRotationOf(vector))
     )
   }
 
   it must "always be the rotation or reflection of itself" in {
     check(
-      forAll(vectorIntGen)(vector => vector.isRotationOrReflectionOf(vector))
+      forAll(arbitrary[Vector[Int]])(vector => vector.isRotationOrReflectionOf(vector))
     )
   }
 
