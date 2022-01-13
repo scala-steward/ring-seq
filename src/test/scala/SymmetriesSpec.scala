@@ -50,10 +50,7 @@ class SymmetriesSpec extends AnyFlatSpec with RingVector with should.Matchers {
   }
 
   "Any Vector" must "have rotational higher or equal than reflectional symmetry" in {
-    val gen: Gen[Vector[Int]] =
-      for
-        vector <- Gen.containerOf[Vector, Int](Gen.oneOf(1, 3, 5))
-      yield vector
+    val gen: Gen[Vector[Int]] = Gen.containerOf[Vector, Int](Gen.oneOf(1, 3, 5))
     check(
       forAll(gen)(vector => vector.rotationalSymmetry >= vector.symmetry)
     )
