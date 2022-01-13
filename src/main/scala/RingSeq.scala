@@ -63,22 +63,24 @@ trait RingSeq:
       sliceO(0, step * (ring.size - 1) + size).sliding(size, step).asInstanceOf[Iterator[B]]
 
     def allRotations: Iterator[B] =
-      slidingO(ring.size)
+      if ring.isEmpty then Iterator(ring)
+      else slidingO(ring.size)
 
     def allRotationsAndReflections: Iterator[B] =
-      (allRotations ++ ring.reverse.allRotations).asInstanceOf[Iterator[B]]
+      if ring.isEmpty then Iterator(ring)
+      else (allRotations ++ ring.reverse.allRotations).asInstanceOf[Iterator[B]]
 
     def minRotation(implicit ordering: Ordering[B]): B =
       allRotations.min(ordering)
 
     def isRotationOf(other: B): Boolean =
-      ring == other || allRotations.drop(1).contains(other)
+      allRotations.contains(other)
 
     def isReflectionOf(other: B): Boolean =
       ring == other || ring.reflectAt() == other
 
     def isRotationOrReflectionOf(other: B): Boolean =
-      ring == other || allRotationsAndReflections.drop(1).contains(other)
+      allRotationsAndReflections.contains(other)
 
     private def areFoldsSymmetrical: Int => Boolean =
       n => rotateRight(ring.size / n) == ring
