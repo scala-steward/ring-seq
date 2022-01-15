@@ -37,12 +37,16 @@ class RotationsReflectionsSpec extends AnyFlatSpec with RingSeq with should.Matc
     s.reflectAt() shouldBe Seq(1, 5, 4, 3, 2)
   }
 
+  it can "be reflected as reversed" in {
+    s.reflectAt(-1) shouldBe s.reverse
+  }
+
   it can "be reflected at a given index" in {
     s.reflectAt(2) shouldBe Seq(3, 2, 1, 5, 4)
   }
 
   it can "iterate on all rotations" in {
-    s.allRotations.toList shouldBe List(
+    s.rotations.toList shouldBe List(
       s,
       oneLeft,
       Seq(3, 4, 5, 1, 2),
@@ -51,8 +55,22 @@ class RotationsReflectionsSpec extends AnyFlatSpec with RingSeq with should.Matc
     )
   }
 
+  it can "iterate on all reflections" in {
+    s.reflections.toList shouldBe List(
+      s,
+      Seq(1, 5, 4, 3, 2)
+    )
+  }
+
+  it can "iterate on all reversions" in {
+    s.reversions.toList shouldBe List(
+      s,
+      s.reverse
+    )
+  }
+
   it can "iterate on all rotations and reflections" in {
-    s.allRotationsAndReflections.toList shouldBe List(
+    s.rotationsAndReflections.toList shouldBe List(
       s,
       oneLeft,
       Seq(3, 4, 5, 1, 2),
@@ -72,7 +90,7 @@ class RotationsReflectionsSpec extends AnyFlatSpec with RingSeq with should.Matc
 
   it can "be the rotation of another Seq" in {
     s.isRotationOf(Seq(3, 4, 5, 1, 2)) shouldBe true
-    s.allRotations.forall(s.isRotationOf) shouldBe true
+    s.rotations.forall(s.isRotationOf) shouldBe true
   }
 
   it can "be the reflection of another Seq" in {
@@ -81,18 +99,18 @@ class RotationsReflectionsSpec extends AnyFlatSpec with RingSeq with should.Matc
 
   it can "be the rotation or reflection of another Seq" in {
     s.isRotationOrReflectionOf(Seq(3, 2, 1, 5, 4)) shouldBe true
-    s.allRotationsAndReflections.forall(s.isRotationOrReflectionOf) shouldBe true
+    s.rotationsAndReflections.forall(s.isRotationOrReflectionOf) shouldBe true
   }
 
   "All rotations of a Seq" must "contain itself" in {
     check(
-      forAll(arbitrary[Seq[Int]])(seq => seq.allRotations.contains(seq))
+      forAll(arbitrary[Seq[Int]])(seq => seq.rotations.contains(seq))
     )
   }
 
   "All rotations and reflections of a Seq" must "contain itself" in {
     check(
-      forAll(arbitrary[Seq[Int]])(seq => seq.allRotationsAndReflections.contains(seq))
+      forAll(arbitrary[Seq[Int]])(seq => seq.rotationsAndReflections.contains(seq))
     )
   }
 
