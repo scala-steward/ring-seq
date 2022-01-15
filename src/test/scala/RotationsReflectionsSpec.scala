@@ -37,12 +37,12 @@ class RotationsReflectionsSpec extends AnyFlatSpec with RingSeq with should.Matc
     s.reflectAt() shouldBe Seq(1, 5, 4, 3, 2)
   }
 
-  it can "be reflected as reversed" in {
-    s.reflectAt(-1) shouldBe s.reverse
-  }
-
   it can "be reflected at a given index" in {
     s.reflectAt(2) shouldBe Seq(3, 2, 1, 5, 4)
+  }
+
+  it can "be reflected as reversed" in {
+    s.reflectAt(-1) shouldBe s.reverse
   }
 
   it can "iterate on all rotations" in {
