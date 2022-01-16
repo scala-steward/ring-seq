@@ -67,14 +67,16 @@ trait RingSeq:
       else slidingO(ring.size)
 
     def reflections: Iterator[B] =
-      List(ring, ring.reflectAt()).iterator
+      if ring.isEmpty then Iterator(ring)
+      else List(ring, ring.reflectAt()).iterator
 
     def reversions: Iterator[B] =
-      List(ring, ring.reverse.asInstanceOf[B]).iterator
+      if ring.isEmpty then Iterator(ring)
+      else List(ring, ring.reverse.asInstanceOf[B]).iterator
 
     def rotationsAndReflections: Iterator[B] =
       if ring.isEmpty then Iterator(ring)
-      else (rotations ++ ring.reverse.rotations).asInstanceOf[Iterator[B]]
+      else rotations ++ ring.reverse.rotations.asInstanceOf[Iterator[B]]
 
     def minRotation(implicit ordering: Ordering[B]): B =
       rotations.min(ordering)
