@@ -68,10 +68,12 @@ trait RingSeq:
       else slidingO(ring.size)
 
     def reflections: Iterator[B[A]] =
-      List(ring, ring.reflectAt()).iterator
+      if ring.isEmpty then Iterator(ring)
+      else List(ring, ring.reflectAt()).iterator
 
     def reversions: Iterator[B[A]] =
-      List(ring, ring.reverse).iterator
+      if ring.isEmpty then Iterator(ring)
+      else List(ring, ring.reverse).iterator
 
     def rotationsAndReflections: Iterator[B[A]] =
       if ring.isEmpty then Iterator(ring)
