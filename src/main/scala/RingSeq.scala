@@ -62,33 +62,35 @@ trait RingSeq:
     def slidingO(size: Int, step: Int = 1): Iterator[B] =
       sliceO(0, step * (ring.size - 1) + size).sliding(size, step).asInstanceOf[Iterator[B]]
 
+    private def transformations(f: B => Iterator[B]): Iterator[B] =
+      if ring.isEmpty then Iterator(ring) else f(ring)
+
     def rotations: Iterator[B] =
-      if ring.isEmpty then Iterator(ring)
-      else slidingO(ring.size)
+      transformations(r => slidingO(r.size))
 
     def reflections: Iterator[B] =
-      if ring.isEmpty then Iterator(ring)
-      else List(ring, ring.reflectAt()).iterator
+      transformations(r => List(r, r.reflectAt()).iterator)
 
     def reversions: Iterator[B] =
-      if ring.isEmpty then Iterator(ring)
-      else List(ring, ring.reverse.asInstanceOf[B]).iterator
+      transformations(r => List(r, r.reverse.asInstanceOf[B]).iterator)
 
     def rotationsAndReflections: Iterator[B] =
-      if ring.isEmpty then Iterator(ring)
-      else rotations ++ ring.reverse.rotations.asInstanceOf[Iterator[B]]
+      transformations(r => r.rotations ++ r.reverse.asInstanceOf[B].rotations)
 
     def minRotation(implicit ordering: Ordering[B]): B =
       rotations.min(ordering)
 
+    private def isTransformationOf(other: B, f: B => Iterator[B]): Boolean =
+      ring.sizeCompare(other) == 0 && f(ring).contains(other)
+
     def isRotationOf(other: B): Boolean =
-      rotations.contains(other)
+      isTransformationOf(other, _.rotations)
 
     def isReflectionOf(other: B): Boolean =
-      ring == other || ring.reflectAt() == other
+      isTransformationOf(other, _.reflections)
 
     def isRotationOrReflectionOf(other: B): Boolean =
-      rotationsAndReflections.contains(other)
+      isTransformationOf(other, _.rotationsAndReflections)
 
     private def areFoldsSymmetrical: Int => Boolean =
       n => rotateRight(ring.size / n) == ring
