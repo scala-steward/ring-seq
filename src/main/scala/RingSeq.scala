@@ -76,7 +76,7 @@ trait RingSeq:
       transformations(r => List(r, r.reverse).iterator)
 
     def rotationsAndReflections: Iterator[B[A]] =
-      transformations(r => r.rotations ++ r.reverse.rotations)
+      transformations(_.reflections.flatMap(_.rotations))
 
     def minRotation(implicit ordering: Ordering[B[A]]): B[A] =
       rotations.min(ordering)

@@ -76,11 +76,11 @@ class RotationsReflectionsSpec extends AnyFlatSpec with RingSeq with should.Matc
       Seq(3, 4, 5, 1, 2),
       Seq(4, 5, 1, 2, 3),
       Seq(5, 1, 2, 3, 4),
+      Seq(1, 5, 4, 3, 2),
       Seq(5, 4, 3, 2, 1),
       Seq(4, 3, 2, 1, 5),
       Seq(3, 2, 1, 5, 4),
-      Seq(2, 1, 5, 4, 3),
-      Seq(1, 5, 4, 3, 2)
+      Seq(2, 1, 5, 4, 3)
     )
   }
 
