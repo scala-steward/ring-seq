@@ -35,11 +35,15 @@ trait RingSeq:
     def segmentLengthO(p: A => Boolean, from: IndexO = 0): Int =
       startAt(from).segmentLength(p)
 
+    private def emptied: B[A] =
+      ring.take(0)
+
     private def multiply(times: Int): B[A] =
-      Seq.fill(times)(ring).flatten.asInstanceOf[B[A]]
+      (0 until times).foldLeft(emptied)((acc, _) => acc ++ ring)
 
     def sliceO(from: IndexO, to: IndexO): B[A] =
-      if from >= to || ring.isEmpty then Seq.empty.asInstanceOf[B[A]]
+      if ring.isEmpty then ring
+      else if from >= to then emptied
       else
         val length = to - from
         val times = Math.ceil(length / ring.size).toInt + 1
