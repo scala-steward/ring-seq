@@ -38,7 +38,7 @@ trait RingSeq:
       ring.take(0).asInstanceOf[B]
 
     private def multiply(times: Int): B =
-      Seq.fill(times)(ring).flatten.asInstanceOf[B]
+      (0 until times).foldLeft(emptied)((acc, _) => (acc ++ ring).asInstanceOf[B])
 
     def sliceO(from: IndexO, to: IndexO): B =
       if ring.isEmpty then ring
