@@ -1,3 +1,5 @@
+import RingSeq.*
+
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Test.check
 import org.scalacheck.Arbitrary.arbitrary
@@ -8,7 +10,7 @@ import org.scalatest.matchers.*
 import math.Ordering.Implicits.seqOrdering
 import scala.collection.immutable.Queue
 
-class RotationsReflectionsSpec extends AnyFlatSpec with RingSeq with should.Matchers {
+class RotationsReflectionsSpec extends AnyFlatSpec with should.Matchers {
 
   val s = Seq(1, 2, 3, 4, 5)
   val oneLeft = Seq(2, 3, 4, 5, 1)

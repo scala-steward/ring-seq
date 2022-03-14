@@ -1,6 +1,6 @@
 import scala.Ordering.Implicits.*
 
-trait RingSeq:
+object RingSeq
   
   /* for improved readability, a Seq index */
   type Index = Int
