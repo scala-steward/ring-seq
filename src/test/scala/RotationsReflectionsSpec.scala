@@ -1,3 +1,5 @@
+import RingVector.*
+
 import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Test.check
@@ -8,7 +10,7 @@ import org.scalatest.matchers.*
 
 import math.Ordering.Implicits.seqOrdering
 
-class RotationsReflectionsSpec extends AnyFlatSpec with RingVector with should.Matchers {
+class RotationsReflectionsSpec extends AnyFlatSpec with should.Matchers {
 
   val v = Vector(1, 2, 3, 4, 5)
   val oneLeft = Vector(2, 3, 4, 5, 1)

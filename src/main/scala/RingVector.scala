@@ -131,3 +131,5 @@ trait RingVector:
 
     def symmetry: Int =
       symmetryIndices.size
+
+object RingVector extends RingVector

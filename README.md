@@ -2,11 +2,13 @@
 Extends Scala3 [`immutable.Vector`](https://dotty.epfl.ch/api/scala/collection/immutable/Vector.html) with ring (circular) methods.
 
 ```scala
+import RingVector.*
+
 "RING".toVector.rotateRight(1) // Vector(G,R,I,N)
 ```
 
 ## How to use
-Use the [`RingVector`](/src/main/scala/RingVector.scala) trait to extend classes or objects
+Import the [`RingVector`](/src/main/scala/RingVector.scala) object
 where a `Vector` has to be considered circular.
 
 ## Need
