@@ -1,6 +1,6 @@
 import Ordering.Implicits.*
 
-trait RingVector:
+object RingVector:
   
   /* for improved readability, a Vector index */
   type Index = Int
@@ -131,5 +131,3 @@ trait RingVector:
 
     def symmetry: Int =
       symmetryIndices.size
-
-object RingVector extends RingVector

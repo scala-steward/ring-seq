@@ -20,9 +20,9 @@ chances are you don't want to locally reinvent the wheel (pun intended).
 where most of the circular use cases are already solved
 and building blocks provided for the others.
 
-One early approach was to create a dedicated collection.
-But differences with `Vector` are few,
-so a Scala3 [`extension`](https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html) seems a better fit.
+Leveraging Scala3 [`extension`](https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html),
+it acts like a _decorator_,
+providing new circular methods to `Vector`.
 
 ## Methods
 
