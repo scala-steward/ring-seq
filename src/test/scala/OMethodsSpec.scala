@@ -1,3 +1,5 @@
+import RingSeq.*
+
 import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Test.check
@@ -6,7 +8,7 @@ import org.scalatest.*
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
 
-class OMethodsSpec extends AnyFlatSpec with RingSeq with should.Matchers {
+class OMethodsSpec extends AnyFlatSpec with should.Matchers {
 
   val s = Seq(1, 2, 3, 4, 5)
 
