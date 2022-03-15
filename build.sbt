@@ -3,10 +3,10 @@ val scalacheck = "org.scalacheck" %% "scalacheck" % "1.15.4" % "test"
 
 ThisBuild / organization := "com.tbd"
 ThisBuild / version := "0.1"
-ThisBuild / scalaVersion := "3.1.0"
+ThisBuild / scalaVersion := "3.1.1"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "ring-vector",
+    name := "ring-seq",
     libraryDependencies ++= Seq(scalatest, scalacheck)
   )
